@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "563008173489",
+    "firebase_url": "https://allergies-eb2fa-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "allergies-eb2fa",
+    "storage_bucket": "allergies-eb2fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563008173489:android:75247db19c4bd88b61b990",
+        "android_client_info": {
+          "package_name": "com.example.LastProject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPqyCiWfXVA6Fw-4wAm83UgLyCC6r-j7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
