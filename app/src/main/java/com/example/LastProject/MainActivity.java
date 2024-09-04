@@ -156,28 +156,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*private void recognizeText() {
-        if (imageUri != null) {
-            try {
-                InputImage inputImage = InputImage.fromFilePath(this, imageUri);
-                textRecognizer.process(inputImage)
-                        .addOnSuccessListener(text -> {
-                            String recognizedText = text.getText();
-                            recgText.setText(recognizedText);
-                            checkTextInFirebase(recognizedText);
-                        })
-                        .addOnFailureListener(e -> {
-                            String errorMsg = "Failed to recognize text: " + e.getMessage();
-                            Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-                        });
-            } catch (IOException e) {
-                String errorMsg = "Error loading image: " + e.getMessage();
-                Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void checkTextInFirebase(String text) {
+    /*private void checkTextInFirebase(String text) {
         reference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 boolean foundAllergy = false;
