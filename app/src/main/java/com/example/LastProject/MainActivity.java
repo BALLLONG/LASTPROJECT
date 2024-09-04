@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
         initializeViews();
         configureFirebase();
         setOnClickListeners();
-
-
     }
 
     public void showData() {
@@ -227,10 +225,12 @@ public class MainActivity extends AppCompatActivity {
         ref.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().exists()) {
+                    // ดึงค่าจาก Firebase และแปลงเป็นตัวพิมพ์เล็ก
                     String allergiesText = task.getResult().getValue(String.class);
-
+                    String textLowerCase = text.toLowerCase(); // ข้อความที่รับจากการรู้จำแปลงเป็นตัวพิมพ์เล็ก
                     if (allergiesText != null && text.contains(allergiesText)) {
-                        showAlert("Allergy Alert", "Potential allergy found: " + allergiesText);
+                        showAlert1("","");
+                        //showAlert("Allergy Alert", "Potential allergy found: " + allergiesText);
                     } else {
                         showAlert("No Allergy Found", "No allergens detected in the text.");
                     }
@@ -250,6 +250,19 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage(message)
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+    private void showAlert1(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.TransparentDialogTheme);
+        View customLayout = getLayoutInflater().inflate(R.layout.alert, null);
+        builder.setView(customLayout);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button successDoneButton = customLayout.findViewById(R.id.successDone);
+        if (successDoneButton != null) {
+            successDoneButton.setOnClickListener(v -> dialog.dismiss());
+        }
     }
 }
 
