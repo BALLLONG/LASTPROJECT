@@ -166,47 +166,6 @@ public class MainActivity extends AppCompatActivity {
                             recgText.setText(recognizedText);
                             checkTextInFirebase(recognizedText);
                         })
-                        .addOnFailureListener(e -> Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
-            } catch (IOException e) {
-                e.printStackTrace(); // หรือการจัดการข้อผิดพลาดที่เหมาะสม
-            }
-        }
-    }
-
-    private void checkTextInFirebase(String text) {
-
-        reference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                boolean foundAllergy = false;
-                if (task.getResult().exists()) {
-                    DataSnapshot snapshot = task.getResult();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        String allergy = dataSnapshot.child("allergies").getValue(String.class);
-                        if (allergy != null && text.contains(allergy)) {
-                            showAlert("", "");
-                            foundAllergy = true;
-                            break; // ออกจากลูปเมื่อพบสารก่อภูมิแพ้
-                        }
-                    }
-                }
-                if (!foundAllergy) {
-                    showAlert("", "");
-                }
-            } else {
-                Toast.makeText(MainActivity.this, "Failed to check data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
-    /*private void recognizeText() {
-        if (imageUri != null) {
-            try {
-                InputImage inputImage = InputImage.fromFilePath(this, imageUri);
-                textRecognizer.process(inputImage)
-                        .addOnSuccessListener(text -> {
-                            String recognizedText = text.getText();
-                            recgText.setText(recognizedText);
-                            checkTextInFirebase(recognizedText);
-                        })
                         .addOnFailureListener(e -> {
                             String errorMsg = "Failed to recognize text: " + e.getMessage();
                             Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
