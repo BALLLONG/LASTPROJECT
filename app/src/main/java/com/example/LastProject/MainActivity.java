@@ -153,48 +153,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Image not selected", Toast.LENGTH_SHORT).show();
         }
     }
-
-    /*private void checkTextInFirebase(String text) {
-        reference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                boolean foundAllergy = false;
-                DataSnapshot snapshot = task.getResult();
-                if (snapshot != null && snapshot.exists()) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        String allergy = dataSnapshot.child("allergies").getValue(String.class);
-                        if (allergy != null && text.contains(allergy)) {
-                            showAlert("Allergy Alert", "Potential allergy found: " + allergy);
-                            foundAllergy = true;
-                            break; // Exit loop when allergy is found
-                        }
-                    }
-                }
-                if (!foundAllergy) {
-                    showAlert("No Allergy Found", "No allergens detected in the text.");
-                }
-            } else {
-                String errorMsg = "Failed to check data: " + task.getException().getMessage();
-                Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-
-
-    private void showAlert(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.TransparentDialogTheme);
-        View customLayout = getLayoutInflater().inflate(R.layout.alert, null);
-        builder.setView(customLayout);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        Button successDoneButton = customLayout.findViewById(R.id.successDone);
-        if (successDoneButton != null) {
-            successDoneButton.setOnClickListener(v -> dialog.dismiss());
-        }
-    }*/
     private void recognizeText() {
         if (imageUri != null) {
             try {
@@ -230,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
                     String textLowerCase = text.toLowerCase(); // ข้อความที่รับจากการรู้จำแปลงเป็นตัวพิมพ์เล็ก
                     if (allergiesText != null && text.contains(allergiesText)) {
                         showAlert1("","");
-                        //showAlert("Allergy Alert", "Potential allergy found: " + allergiesText);
                     } else {
                         showAlert("No Allergy Found", "No allergens detected in the text.");
                     }
