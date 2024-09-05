@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String FILE_NAME = "Personal_Info.txt";
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://allergies-eb2fa-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference reference = database.getReference("Food_Allergies");
-    TextView textView;
 
 
     @Override
@@ -60,37 +59,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = findViewById(R.id.textViewps3);
-        showData();
         initializeViews();
         configureFirebase();
         setOnClickListeners();
     }
 
-    public void showData() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Personal_Upload");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                StringBuilder data = new StringBuilder();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    DataClass dataClass = snapshot.getValue(DataClass.class);
-                    if (dataClass != null) {
-                        data.append(dataClass.getAllergies()).append("\n");
-                    }
-                }
-                if (data.length() == 0) {
-                    data.append("No data available");
-                }
-                textView.setText(data.toString());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MainActivity.this, "Failed to load data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void initializeViews() {
         clear = findViewById(R.id.clear);

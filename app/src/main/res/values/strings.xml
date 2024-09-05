@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">LastProject</string>
+        <string-array name="allergy_options">
+            <item>Peanuts</item>
+            <item>Tree Nuts</item>
+            <item>Milk</item>
+            <item>Eggs</item>
+            <item>Soy</item>
+            <item>Wheat</item>
+            <item>Fish</item>
+            <item>Shellfish</item>
+        </string-array>
 </resources>

@@ -3,13 +3,13 @@ package com.example.LastProject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,39 +22,79 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public class Personal_info extends AppCompatActivity {
-    ImageView btnBack;
-    Button btnWrite;
-    TextView textView;
-    EditText wrtext;
-
+    private Spinner spinnerAllergies;
+    private ImageView btnBack;
+    private Button btnWrite;
+    private TextView textView;
+    private int nextIndex = 1; // Starting index for new entries
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_info);
         getSupportActionBar().setTitle("Food Allergies App");
-        btnBack = findViewById(R.id.btnBack);
-        textView = findViewById(R.id.textViewps);
+
+        spinnerAllergies = findViewById(R.id.spinnerAllergies);
         btnWrite = findViewById(R.id.btnWrite);
-        wrtext = findViewById(R.id.WRtext);
-        //setListener();
-        //readText();
+        btnBack  = findViewById(R.id.btnBack);
+        textView = findViewById(R.id.textViewps);
+
+        // Setting up Spinner with allergy options
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.allergy_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAllergies.setAdapter(adapter);
+
+        btnWrite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadData();
+            }
+        });
+
         showData();
     }
 
+    private void uploadData() {
+        String selectedAllergy = spinnerAllergies.getSelectedItem().toString();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Personal_Upload/Food_Allergies");
+
+        // Create a new key (index) for the data
+        String newKey = "allergies" + nextIndex;
+
+        // Increment the index for the next entry
+        nextIndex++;
+
+        reference.child(newKey).setValue(selectedAllergy)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(Personal_info.this, "Saved", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Personal_info.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void showData() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Personal_Upload");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Personal_Upload/Food_Allergies");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 StringBuilder data = new StringBuilder();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    DataClass dataClass = snapshot.getValue(DataClass.class);
-                    if (dataClass != null) {
-                        data.append(dataClass.getAllergies()).append("\n");
-                    }
+                    String value = snapshot.getValue(String.class);
+                    data.append(value).append("\n");
                 }
                 if (data.length() == 0) {
                     data.append("No data available");
@@ -75,84 +115,5 @@ public class Personal_info extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btnWrite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadData();
-            }
-        });
-    }
-
-
-    private void uploadData() {
-
-        String text = wrtext.getText().toString();
-
-        DataClass dataClass = new DataClass(text);
-
-        FirebaseDatabase.getInstance().getReference("Personal_Upload").child("Food_Allergies")
-                .setValue(dataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(Personal_info.this, "Saved", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Personal_info.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 }
-
-
-    /*private void readText() {
-        String read = "";
-        try {
-            InputStream inputStream = openFileInput("Personal_Info.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            String reciving_text = "";
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((reciving_text = bufferedReader.readLine()) != null){
-                stringBuilder.append("\n").append(reciving_text);
-            }
-            inputStream.close();
-            read = stringBuilder.toString();
-            textView.setText(read);
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void setListener() {
-        btnWrite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                writeText(wrtext.getText().toString());
-            }
-        });
-
-    private void writeText(String text) {
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("Personal_Info.txt",MODE_PRIVATE));
-            outputStreamWriter.write(text);
-            outputStreamWriter.close();
-
-            wrtext.setText(null);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Toast.makeText(this,"Data is save",Toast.LENGTH_SHORT).show();
-        readText();
-    }
-
-}*/

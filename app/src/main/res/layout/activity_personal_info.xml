@@ -15,38 +15,40 @@
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back" />
+        app:srcCompat="@drawable/back"/>
 
     <Button
         android:id="@+id/btnWrite"
         android:layout_width="232dp"
         android:layout_height="58dp"
         android:layout_marginStart="126dp"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="68dp"
         android:layout_marginEnd="126dp"
         android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/WRtext" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerAllergies"
+        tools:ignore="MissingConstraints" />
 
-    <EditText
-        android:id="@+id/WRtext"
-        android:layout_width="370dp"
-        android:layout_height="148dp"
+    <Spinner
+        android:id="@+id/spinnerAllergies"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_marginStart="14dp"
-        android:layout_marginTop="97dp"
         android:layout_marginEnd="14dp"
-        android:layout_marginBottom="42dp"
+
         android:ems="10"
+        android:entries="@array/allergy_options"
         android:gravity="start|top"
         android:hint="Write Here"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/btnWrite"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.123" />
 
     <TextView
         android:id="@+id/textViewps"
