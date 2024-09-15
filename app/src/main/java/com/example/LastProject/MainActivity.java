@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         clear = findViewById(R.id.clear);
         getImage = findViewById(R.id.getImage);
         copy = findViewById(R.id.copy);
-        //recgText = findViewById(R.id.recgText);
+        recgText = findViewById(R.id.recgText);
         personalinfo = findViewById(R.id.Personal);
         textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
     }
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkTextInFirebase(String text) {
         DatabaseReference ref = FirebaseDatabase.getInstance("https://allergies-eb2fa-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("Personal_Upload/Food_Allergies/allergies");
+                .getReference("Personal_Upload/Food_Allergies");
 
         ref.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -170,18 +170,23 @@ public class MainActivity extends AppCompatActivity {
                             showAlert2("", "No allergy detected.");
                         }
                     } else if (value instanceof HashMap) {
-                        // หากเป็น HashMap ให้แปลงเป็น String
+                        // หากเป็น HashMap ให้ตรวจสอบค่าทั้งหมด
                         HashMap<String, String> map = (HashMap<String, String>) value;
-                        // สมมติว่าคุณต้องการดึงค่าแรกจาก HashMap
-                        String allergiesText = map.values().iterator().next();
                         String textLowerCase = text.toLowerCase();
-                        if (textLowerCase.contains(allergiesText.toLowerCase())) {
+                        boolean foundAllergy = false;
+                        for (String allergiesText : map.values()) {
+                            if (textLowerCase.contains(allergiesText.toLowerCase())) {
+                                foundAllergy = true;
+                                break;
+                            }
+                        }
+                        if (foundAllergy) {
                             showAlert1("", "Allergy detected!");
                         } else {
-                            showAlert("", "No allergy detected.");
+                            showAlert2("", "No allergy detected.");
                         }
                     } else {
-                        showAlert2("Unexpected Data Type", "The data type is not as expected.");
+                        showAlert("Unexpected Data Type", "The data type is not as expected.");
                     }
                 } else {
                     showAlert("No Data Found", "No data found at the specified path.");
