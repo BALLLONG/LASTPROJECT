@@ -22,15 +22,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Personal_info extends AppCompatActivity {
     private Spinner spinnerAllergies;
     private ImageView btnBack;
-    private Button btnWrite;
+    private Button btnWrite,btnEdit;
     private TextView textView;
-    private int nextIndex = 1; // Starting index for new entries
+    private int nextIndex = 0; // Starting index for new entries
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +39,7 @@ public class Personal_info extends AppCompatActivity {
         btnWrite = findViewById(R.id.btnWrite);
         btnBack  = findViewById(R.id.btnBack);
         textView = findViewById(R.id.textViewps);
+        btnEdit = findViewById(R.id.btnEdit);
 
         // Setting up Spinner with allergy options
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -65,25 +63,30 @@ public class Personal_info extends AppCompatActivity {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Personal_Upload/Food_Allergies");
 
         // Create a new key (index) for the data
-        String newKey = "allergies" + nextIndex;
+        String newKey = reference.push().getKey();
 
         // Increment the index for the next entry
-        nextIndex++;
 
-        reference.child(newKey).setValue(selectedAllergy)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(Personal_info.this, "Saved", Toast.LENGTH_SHORT).show();
+        if(newKey != null) {
+            reference.child(newKey).setValue(selectedAllergy)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(Personal_info.this, "Saved", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(Personal_info.this, "Failed to save: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Personal_info.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(Personal_info.this, "Failed to save: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(Personal_info.this, "Failed to generate a unique key", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showData() {
@@ -115,5 +118,12 @@ public class Personal_info extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Personal_info.this, Edit.class));
+            }
+        });
+
     }
 }

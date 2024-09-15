@@ -40,6 +40,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         clear = findViewById(R.id.clear);
         getImage = findViewById(R.id.getImage);
         copy = findViewById(R.id.copy);
-        recgText = findViewById(R.id.recgText);
+        //recgText = findViewById(R.id.recgText);
         personalinfo = findViewById(R.id.Personal);
         textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
     }
@@ -155,14 +157,31 @@ public class MainActivity extends AppCompatActivity {
 
         ref.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                if (task.getResult().exists()) {
-                    // ดึงค่าจาก Firebase และแปลงเป็นตัวพิมพ์เล็ก
-                    String allergiesText = task.getResult().getValue(String.class);
-                    String textLowerCase = text.toLowerCase(); // ข้อความที่รับจากการรู้จำแปลงเป็นตัวพิมพ์เล็ก
-                    if (allergiesText != null && text.contains(allergiesText)) {
-                        showAlert1("","");
+                DataSnapshot snapshot = task.getResult();
+                if (snapshot.exists()) {
+                    // ตรวจสอบว่า snapshot เป็น HashMap หรือ String
+                    Object value = snapshot.getValue();
+                    if (value instanceof String) {
+                        String allergiesText = (String) value;
+                        String textLowerCase = text.toLowerCase(); // ข้อความที่รับจากการรู้จำแปลงเป็นตัวพิมพ์เล็ก
+                        if (textLowerCase.contains(allergiesText.toLowerCase())) {
+                            showAlert1("", "Allergy detected!");
+                        } else {
+                            showAlert2("", "No allergy detected.");
+                        }
+                    } else if (value instanceof HashMap) {
+                        // หากเป็น HashMap ให้แปลงเป็น String
+                        HashMap<String, String> map = (HashMap<String, String>) value;
+                        // สมมติว่าคุณต้องการดึงค่าแรกจาก HashMap
+                        String allergiesText = map.values().iterator().next();
+                        String textLowerCase = text.toLowerCase();
+                        if (textLowerCase.contains(allergiesText.toLowerCase())) {
+                            showAlert1("", "Allergy detected!");
+                        } else {
+                            showAlert("", "No allergy detected.");
+                        }
                     } else {
-                        showAlert("No Allergy Found", "No allergens detected in the text.");
+                        showAlert2("Unexpected Data Type", "The data type is not as expected.");
                     }
                 } else {
                     showAlert("No Data Found", "No data found at the specified path.");
@@ -194,5 +213,19 @@ public class MainActivity extends AppCompatActivity {
             successDoneButton.setOnClickListener(v -> dialog.dismiss());
         }
     }
+    private void showAlert2(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.TransparentDialogTheme);
+        View customLayout = getLayoutInflater().inflate(R.layout.allow, null);
+        builder.setView(customLayout);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button successDoneButton = customLayout.findViewById(R.id.successDone);
+        if (successDoneButton != null) {
+            successDoneButton.setOnClickListener(v -> dialog.dismiss());
+        }
+    }
+
 }
 

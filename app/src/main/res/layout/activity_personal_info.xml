@@ -9,25 +9,42 @@
 
     <ImageView
         android:id="@+id/btnBack"
-        android:layout_width="44dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="61dp"
+        android:layout_height="57dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/back" />
+
+    <Button
+        android:id="@+id/btnEdit"
+        android:layout_width="232dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="126dp"
+        android:layout_marginTop="108dp"
+        android:layout_marginEnd="126dp"
+        android:text="Edit"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back"/>
+        app:layout_constraintTop_toBottomOf="@+id/spinnerAllergies"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/btnWrite"
         android:layout_width="232dp"
         android:layout_height="58dp"
         android:layout_marginStart="126dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="126dp"
-        android:textColor="@color/black"
         android:text="Save"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerAllergies"
         tools:ignore="MissingConstraints" />
@@ -58,13 +75,13 @@
         android:layout_marginTop="149dp"
         android:layout_marginEnd="171dp"
         android:layout_marginBottom="222dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnWrite"
+        app:layout_constraintTop_toBottomOf="@+id/btnEdit"
         app:layout_constraintVertical_bias="0.41" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
