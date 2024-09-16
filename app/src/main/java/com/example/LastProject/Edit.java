@@ -42,7 +42,7 @@
             setContentView(R.layout.activity_edit);
             btnBack = findViewById(R.id.btnBack);
             recyclerView = findViewById(R.id.recycleview);
-            databaseReference = FirebaseDatabase.getInstance().getReference("Personal_Upload/Food_Allergies"); // ใช้ path ที่ถูกต้อง
+            databaseReference = FirebaseDatabase.getInstance().getReference("Personal_Upload/Food_Allergies");
             list = new ArrayList<>();
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             adapter = new MyAdapter(this, list, databaseReference);
